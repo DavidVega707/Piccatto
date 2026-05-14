@@ -3,65 +3,349 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Piccatto</title>
+    <title>Picatto | Gomitas Enchiladas</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            font-family: 'Inter', sans-serif;
+            background-color: #fffaf5;
         }
-        
-        .container {
-            text-align: center;
-            background: white;
-            padding: 50px;
-            border-radius: 10px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-            max-width: 500px;
+        .gradient-text {
+            background: linear-gradient(90deg, #ef4444, #f97316);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
-        
-        h1 {
-            color: #333;
-            margin-bottom: 20px;
-            font-size: 2.5em;
+        .hero-gradient {
+            background: radial-gradient(circle at center, #ffedd5 0%, #fffaf5 100%);
         }
-        
-        p {
-            color: #666;
-            line-height: 1.6;
-            margin-bottom: 30px;
+        #cart-sidebar {
+            transition: transform 0.3s ease-in-out;
         }
-        
-        button {
-            background: #667eea;
-            color: white;
-            border: none;
-            padding: 12px 30px;
-            font-size: 1em;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background 0.3s ease;
+        .cart-open {
+            transform: translateX(0) !important;
         }
-        
-        button:hover {
-            background: #764ba2;
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        @keyframes soft-glow {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 0.6; transform: scale(1.05); }
+        }
+        .animate-glow {
+            animation: soft-glow 3s infinite ease-in-out;
         }
     </style>
 </head>
-<body>
-    <div class="container">
-        <h1>Bienvenido a Piccatto</h1>
-        <p>Este es tu archivo index.html. Personalízalo según tus necesidades.</p>
-        <button onclick="alert('¡Hola Piccatto!')">Hacer Clic</button>
+<body class="text-gray-900 overflow-x-hidden">
+
+    <!-- Navegación -->
+    <nav class="flex justify-between items-center p-6 max-w-6xl mx-auto sticky top-0 bg-white/80 backdrop-blur-md z-40">
+        <div class="flex items-center gap-3">
+            <div class="h-10 w-10 flex items-center justify-center bg-white rounded-full shadow-sm border border-red-100 p-1 overflow-hidden">
+                <img src="logo.svg" alt="Logo" class="w-full h-full object-contain" onerror="this.src='https://i.imgur.com/FbuSsbw.png'">
+            </div>
+            <span class="text-xl font-black tracking-tighter text-red-600 uppercase italic">Picatto</span>
+        </div>
+        <div class="flex items-center gap-4 md:gap-8 font-medium">
+            <a href="#productos" class="hidden md:block hover:text-orange-500 transition">Productos</a>
+            <button onclick="toggleCart()" class="relative p-2 bg-orange-100 rounded-full text-orange-600 hover:bg-orange-200 transition">
+                <i data-lucide="shopping-cart" class="h-6 w-6"></i>
+                <span id="cart-count" class="absolute -top-1 -right-1 bg-red-600 text-white text-[10px] font-bold h-5 w-5 flex items-center justify-center rounded-full border-2 border-white">0</span>
+            </button>
+            <a href="#" class="hidden md:block bg-red-600 text-white px-5 py-2 rounded-full hover:bg-red-700 transition shadow-lg">Comprar</a>
+        </div>
+    </nav>
+
+    <!-- Carrito Lateral -->
+    <div id="cart-overlay" onclick="toggleCart()" class="fixed inset-0 bg-black/50 z-50 hidden opacity-0 transition-opacity duration-300"></div>
+    <aside id="cart-sidebar" class="fixed top-0 right-0 h-full w-full max-w-sm bg-white z-[60] shadow-2xl transform translate-x-full flex flex-col">
+        <div class="p-6 border-b flex justify-between items-center">
+            <h2 class="text-2xl font-black text-gray-800 uppercase tracking-tighter italic">Tu Carrito</h2>
+            <button onclick="toggleCart()" class="text-gray-400 hover:text-gray-600">
+                <i data-lucide="x" class="w-8 h-8"></i>
+            </button>
+        </div>
+        <div id="cart-items" class="flex-grow overflow-y-auto p-6 space-y-4">
+            <p class="text-center text-gray-400 py-10 italic text-sm font-medium">Aún no has picado nada... 🌶️</p>
+        </div>
+        <div class="p-6 border-t bg-gray-50">
+            <div class="flex justify-between items-center mb-4">
+                <span class="text-gray-500 font-medium uppercase text-xs tracking-widest">Total Pedido</span>
+                <span id="cart-total" class="text-3xl font-black text-red-600">Q0.00</span>
+            </div>
+            <button onclick="checkout()" class="w-full bg-red-600 text-white py-4 rounded-2xl font-bold hover:bg-red-700 transition shadow-xl active:scale-95 flex items-center justify-center gap-2">
+                <i data-lucide="check-circle" class="w-5 h-5"></i> Finalizar Pedido
+            </button>
+        </div>
+    </aside>
+
+    <!-- Modal JSON -->
+    <div id="json-modal" class="fixed inset-0 z-[70] hidden items-center justify-center p-4">
+        <div class="absolute inset-0 bg-black/60" onclick="closeJsonModal()"></div>
+        <div class="bg-white rounded-3xl p-8 max-w-2xl w-full relative shadow-2xl overflow-hidden">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-bold">Resumen de tu compra (JSON)</h3>
+                <button onclick="closeJsonModal()" class="text-gray-400 hover:text-red-500">
+                    <i data-lucide="x-circle"></i>
+                </button>
+            </div>
+            <pre id="json-display" class="bg-gray-900 text-green-400 p-6 rounded-2xl overflow-x-auto text-xs md:text-sm font-mono max-h-96 border-l-4 border-orange-500"></pre>
+            <div class="mt-6 flex gap-4">
+                <button onclick="copyJson()" class="flex-grow bg-orange-500 text-white py-3 rounded-xl font-bold hover:bg-orange-600 flex items-center justify-center gap-2 text-sm">
+                    <i data-lucide="copy" class="w-4 h-4"></i> Copiar Código JSON
+                </button>
+            </div>
+        </div>
     </div>
+
+    <!-- Hero -->
+    <header class="hero-gradient py-12 px-6 text-center">
+        <div class="max-w-4xl mx-auto flex flex-col items-center">
+            
+            <!-- Contenedor para Logo Principal -->
+            <div class="relative mb-10 group">
+                <div class="absolute inset-0 bg-orange-400 rounded-full blur-3xl opacity-30 animate-glow"></div>
+                <div class="relative bg-white p-6 rounded-full border-[6px] border-orange-500 shadow-[0_20px_50px_rgba(249,115,22,0.4)] animate-bounce h-40 w-40 md:h-60 md:w-60 flex items-center justify-center overflow-hidden" style="animation-duration: 6s">
+                    <img src="logo.svg" alt="Picatto Mascot" class="w-full h-full object-contain" onerror="this.src='https://i.imgur.com/FbuSsbw.png'">
+                </div>
+            </div>
+
+            <!-- Título ajustado para evitar cortes -->
+            <div class="px-2">
+                <h1 class="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black mb-4 tracking-tight uppercase leading-[0.9] italic">
+                    GOMITAS QUE <br><span class="gradient-text tracking-normal">PICAN RICO</span>
+                </h1>
+            </div>
+            
+            <p class="text-lg md:text-xl text-gray-500 mb-10 max-w-xl mx-auto font-medium leading-relaxed">
+                Sabor guatemalteco hecho con la mezcla perfecta de chiles, limón y mucha pasión. ¡Prepárate para el fuego!
+            </p>
+            <a href="#productos" class="bg-red-600 text-white font-bold px-10 py-5 rounded-2xl hover:bg-red-700 transition-all transform hover:scale-105 shadow-2xl flex items-center gap-3 text-lg">
+                Ver sabores <i data-lucide="flame" class="w-6 h-6"></i>
+            </a>
+        </div>
+    </header>
+
+    <!-- Productos -->
+    <section id="productos" class="max-w-6xl mx-auto py-20 px-6">
+        <div class="text-center mb-16">
+            <h2 class="text-4xl font-black uppercase text-gray-900 mb-2 italic">Nuestro Menú</h2>
+            <div class="w-24 h-2 bg-red-500 mx-auto rounded-full"></div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+            <!-- Producto 1 -->
+            <div class="group bg-white p-10 rounded-[3rem] shadow-sm border border-gray-100 hover:shadow-2xl transition-all hover:-translate-y-2 relative overflow-hidden flex flex-col h-full">
+                <div class="bg-yellow-50 w-20 h-20 rounded-3xl flex items-center justify-center mb-8 text-4xl shadow-inner">🥭</div>
+                <h3 class="text-2xl font-black mb-3 leading-tight uppercase tracking-tighter italic">Mango Enchilado</h3>
+                <p class="text-gray-500 text-sm mb-8 leading-relaxed flex-grow font-medium">Trozos jugosos de mango deshidratado con una generosa costra de chamoy artesanal y chile morita.</p>
+                <div class="flex flex-col gap-4 mt-auto">
+                    <span class="text-3xl font-black text-orange-600">Q45.00</span>
+                    <div class="flex items-center gap-3">
+                        <input type="number" id="qty-mango" value="1" min="1" class="w-16 bg-gray-100 border-2 border-gray-100 rounded-xl p-3 text-center font-bold focus:ring-2 focus:ring-orange-500 outline-none transition-all">
+                        <button onclick="addToCart('Mango Enchilado', 45, '🥭', 'qty-mango')" class="flex-grow bg-gray-900 text-white p-4 rounded-xl hover:bg-red-600 transition font-bold flex items-center justify-center gap-2 text-sm uppercase tracking-wider">
+                            <i data-lucide="plus" class="w-5 h-5"></i> Añadir
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Producto 2 -->
+            <div class="group bg-white p-10 rounded-[3rem] shadow-sm border border-gray-100 hover:shadow-2xl transition-all hover:-translate-y-2 relative overflow-hidden flex flex-col h-full">
+                <div class="bg-red-50 w-20 h-20 rounded-3xl flex items-center justify-center mb-8 text-4xl shadow-inner">🍉</div>
+                <h3 class="text-2xl font-black mb-3 leading-tight uppercase tracking-tighter italic">Sandía Picatto</h3>
+                <p class="text-gray-500 text-sm mb-8 leading-relaxed flex-grow font-medium">Las clásicas gomitas de sandía ácidas con un baño intenso de chile de árbol seco y sal de limón.</p>
+                <div class="flex flex-col gap-4 mt-auto">
+                    <span class="text-3xl font-black text-orange-600">Q38.00</span>
+                    <div class="flex items-center gap-3">
+                        <input type="number" id="qty-sandia" value="1" min="1" class="w-16 bg-gray-100 border-2 border-gray-100 rounded-xl p-3 text-center font-bold focus:ring-2 focus:ring-orange-500 outline-none transition-all">
+                        <button onclick="addToCart('Sandía Picatto', 38, '🍉', 'qty-sandia')" class="flex-grow bg-gray-900 text-white p-4 rounded-xl hover:bg-red-600 transition font-bold flex items-center justify-center gap-2 text-sm uppercase tracking-wider">
+                            <i data-lucide="plus" class="w-5 h-5"></i> Añadir
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Producto 3 -->
+            <div class="group bg-white p-10 rounded-[3rem] shadow-sm border border-gray-100 hover:shadow-2xl transition-all hover:-translate-y-2 relative overflow-hidden flex flex-col h-full">
+                <div class="bg-orange-50 w-20 h-20 rounded-3xl flex items-center justify-center mb-8 text-4xl shadow-inner">🔥</div>
+                <h3 class="text-2xl font-black mb-3 leading-tight uppercase tracking-tighter italic">Ositos de Fuego</h3>
+                <p class="text-gray-500 text-sm mb-8 leading-relaxed flex-grow font-medium">Ositos frutales dulces que esconden una explosión de calor. Solo aptos para valientes.</p>
+                <div class="flex flex-col gap-4 mt-auto">
+                    <span class="text-3xl font-black text-orange-600">Q40.00</span>
+                    <div class="flex items-center gap-3">
+                        <input type="number" id="qty-ositos" value="1" min="1" class="w-16 bg-gray-100 border-2 border-gray-100 rounded-xl p-3 text-center font-bold focus:ring-2 focus:ring-orange-500 outline-none transition-all">
+                        <button onclick="addToCart('Ositos de Fuego', 40, '🔥', 'qty-ositos')" class="flex-grow bg-gray-900 text-white p-4 rounded-xl hover:bg-red-600 transition font-bold flex items-center justify-center gap-2 text-sm uppercase tracking-wider">
+                            <i data-lucide="plus" class="w-5 h-5"></i> Añadir
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-20 px-6">
+        <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-12">
+            <div class="text-center md:text-left">
+                <div class="flex items-center gap-4 justify-center md:justify-start mb-6">
+                    <div class="h-16 w-16 bg-white rounded-full p-2 border-4 border-red-500 flex items-center justify-center overflow-hidden">
+                        <img src="logo.svg" alt="Logo Footer" class="w-full h-full object-contain" onerror="this.src='https://i.imgur.com/FbuSsbw.png'">
+                    </div>
+                    <h4 class="font-black text-3xl tracking-tighter uppercase italic">PICATTO</h4>
+                </div>
+                <p class="text-gray-400 max-w-xs font-medium">Llevando el picante artesanal a cada rincón de Guatemala desde nuestra cocina.</p>
+            </div>
+            
+            <div class="flex flex-col items-center md:items-end gap-6">
+                <h5 class="font-bold text-gray-400 uppercase tracking-widest text-sm">Síguenos en el fuego</h5>
+                <div class="flex gap-6">
+                    <a href="#" class="p-4 bg-gray-800 rounded-2xl text-white hover:bg-orange-500 transition-all hover:-translate-y-2">
+                        <i data-lucide="instagram"></i>
+                    </a>
+                    <a href="#" class="p-4 bg-gray-800 rounded-2xl text-white hover:bg-red-600 transition-all hover:-translate-y-2">
+                        <i data-lucide="facebook"></i>
+                    </a>
+                    <a href="#" class="p-4 bg-gray-800 rounded-2xl text-white hover:bg-yellow-500 transition-all hover:-translate-y-2">
+                        <i data-lucide="music"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="mt-20 pt-8 border-t border-gray-800 text-center text-gray-500 text-xs uppercase tracking-[0.2em]">
+            &copy; 2024 Picatto | Hecho con fuego en Guatemala
+        </div>
+    </footer>
+
+    <!-- Sistema de Toast -->
+    <div id="toast" class="fixed bottom-8 left-1/2 transform -translate-x-1/2 bg-gray-900 text-white px-8 py-4 rounded-2xl shadow-2xl transition-all opacity-0 translate-y-10 pointer-events-none z-[100] text-sm font-bold border border-gray-700">
+        Mensaje
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        let cart = [];
+        const cartSidebar = document.getElementById('cart-sidebar');
+        const cartOverlay = document.getElementById('cart-overlay');
+        const cartItemsContainer = document.getElementById('cart-items');
+        const cartCountBadge = document.getElementById('cart-count');
+        const cartTotalDisplay = document.getElementById('cart-total');
+
+        function toggleCart() {
+            const isOpen = cartSidebar.classList.contains('cart-open');
+            if (isOpen) {
+                cartSidebar.classList.remove('cart-open');
+                cartOverlay.classList.add('hidden');
+                cartOverlay.classList.remove('opacity-100');
+            } else {
+                cartSidebar.classList.add('cart-open');
+                cartOverlay.classList.remove('hidden');
+                setTimeout(() => cartOverlay.classList.add('opacity-100'), 10);
+            }
+        }
+
+        function showMessage(text) {
+            const toast = document.getElementById('toast');
+            toast.innerText = text;
+            toast.style.opacity = '1';
+            toast.style.transform = 'translate(-50%, -20px)';
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translate(-50%, 40px)';
+            }, 2500);
+        }
+
+        function addToCart(name, price, emoji, inputId) {
+            const quantityInput = document.getElementById(inputId);
+            const quantity = parseInt(quantityInput.value) || 1;
+            if (quantity <= 0) return;
+            const existingItem = cart.find(item => item.name === name);
+            if (existingItem) {
+                existingItem.quantity += quantity;
+            } else {
+                cart.push({ name, price, emoji, quantity });
+            }
+            updateCartUI();
+            showMessage(`¡Se añadieron ${quantity} x ${name}! 🌶️`);
+            quantityInput.value = 1;
+        }
+
+        function updateQuantity(name, change) {
+            const item = cart.find(i => i.name === name);
+            if (item) {
+                item.quantity += change;
+                if (item.quantity <= 0) {
+                    cart = cart.filter(i => i.name !== name);
+                }
+                updateCartUI();
+            }
+        }
+
+        function updateCartUI() {
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            cartCountBadge.innerText = totalItems;
+            if (cart.length === 0) {
+                cartItemsContainer.innerHTML = '<p class="text-center text-gray-400 py-10 italic text-sm font-medium">Aún no has picado nada... 🌶️</p>';
+            } else {
+                cartItemsContainer.innerHTML = cart.map(item => `
+                    <div class="flex items-center gap-4 bg-gray-50 p-4 rounded-3xl border border-gray-100 shadow-sm transition-all hover:bg-white hover:shadow-md">
+                        <div class="text-3xl bg-white w-12 h-12 flex items-center justify-center rounded-2xl shadow-inner border border-gray-50">${item.emoji}</div>
+                        <div class="flex-grow">
+                            <h4 class="font-black text-xs uppercase tracking-tight italic">${item.name}</h4>
+                            <p class="text-orange-600 font-bold text-lg">Q${(item.price * item.quantity).toFixed(2)}</p>
+                        </div>
+                        <div class="flex items-center gap-2 bg-white rounded-xl border-2 border-gray-50 p-1 shadow-sm">
+                            <button onclick="updateQuantity('${item.name}', -1)" class="w-7 h-7 flex items-center justify-center text-gray-400 hover:text-red-600 transition font-bold">&minus;</button>
+                            <span class="text-xs font-black w-4 text-center">${item.quantity}</span>
+                            <button onclick="updateQuantity('${item.name}', 1)" class="w-7 h-7 flex items-center justify-center text-gray-400 hover:text-green-600 transition font-bold">&plus;</button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            cartTotalDisplay.innerText = `Q${total.toFixed(2)}`;
+        }
+
+        function checkout() {
+            if (cart.length === 0) {
+                showMessage("¡Tu carrito está vacío!");
+                return;
+            }
+            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const orderData = {
+                vendedor: "PICATTO GUATEMALA",
+                moneda: "Quetzales (Q)",
+                id_pedido: "PEDIDO-" + Math.random().toString(36).substr(2, 6).toUpperCase(),
+                articulos: cart.map(item => ({
+                    producto: item.name,
+                    cant: item.quantity,
+                    pu: "Q" + item.price.toFixed(2),
+                    subtotal: "Q" + (item.price * item.quantity).toFixed(2)
+                })),
+                total_final: "Q" + total.toFixed(2),
+                fecha: new Date().toLocaleString()
+            };
+            document.getElementById('json-display').innerText = JSON.stringify(orderData, null, 4);
+            document.getElementById('json-modal').style.display = 'flex';
+        }
+
+        function closeJsonModal() { document.getElementById('json-modal').style.display = 'none'; }
+        function copyJson() {
+            const jsonText = document.getElementById('json-display').innerText;
+            const el = document.createElement('textarea');
+            el.value = jsonText;
+            document.body.appendChild(el);
+            el.select();
+            document.execCommand('copy');
+            document.body.removeChild(el);
+            showMessage("¡JSON copiado con éxito!");
+        }
+    </script>
 </body>
 </html>
