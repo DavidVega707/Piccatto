@@ -6,8 +6,8 @@
     <title>Picatto | Gomitas Enchiladas</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
-    <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body {
             font-family: 'Inter', sans-serif;
@@ -53,8 +53,8 @@
         </div>
         <div class="flex items-center gap-4 md:gap-8 font-medium">
             <a href="#productos" class="hidden md:block hover:text-orange-500 transition">Productos</a>
-            <button onclick="toggleCart()" class="relative p-2 bg-orange-100 rounded-full text-orange-600 hover:bg-orange-200 transition">
-                <i data-lucide="shopping-cart" class="h-6 w-6"></i>
+            <button onclick="toggleCart()" class="relative p-3 bg-orange-100 rounded-full text-orange-600 hover:bg-orange-200 transition">
+                <i class="fa-solid fa-cart-shopping text-lg"></i>
                 <span id="cart-count" class="absolute -top-1 -right-1 bg-red-600 text-white text-[10px] font-bold h-5 w-5 flex items-center justify-center rounded-full border-2 border-white">0</span>
             </button>
             <a href="#" class="hidden md:block bg-red-600 text-white px-5 py-2 rounded-full hover:bg-red-700 transition shadow-lg">Comprar</a>
@@ -66,8 +66,8 @@
     <aside id="cart-sidebar" class="fixed top-0 right-0 h-full w-full max-w-sm bg-white z-[60] shadow-2xl transform translate-x-full flex flex-col">
         <div class="p-6 border-b flex justify-between items-center">
             <h2 class="text-2xl font-black text-gray-800 uppercase tracking-tighter italic">Tu Carrito</h2>
-            <button onclick="toggleCart()" class="text-gray-400 hover:text-gray-600">
-                <i data-lucide="x" class="w-8 h-8"></i>
+            <button onclick="toggleCart()" class="text-gray-400 hover:text-gray-600 text-2xl">
+                <i class="fa-solid fa-xmark"></i>
             </button>
         </div>
         <div id="cart-items" class="flex-grow overflow-y-auto p-6 space-y-4">
@@ -79,7 +79,7 @@
                 <span id="cart-total" class="text-3xl font-black text-red-600">Q0.00</span>
             </div>
             <button onclick="checkout()" class="w-full bg-red-600 text-white py-4 rounded-2xl font-bold hover:bg-red-700 transition shadow-xl active:scale-95 flex items-center justify-center gap-2">
-                <i data-lucide="check-circle" class="w-5 h-5"></i> Finalizar Pedido
+                <i class="fa-solid fa-circle-check text-lg"></i> Finalizar Pedido
             </button>
         </div>
     </aside>
@@ -90,21 +90,21 @@
         <div class="bg-white rounded-3xl p-8 max-w-2xl w-full relative shadow-2xl overflow-hidden">
             <div class="flex justify-between items-center mb-4">
                 <h3 class="text-xl font-bold">Resumen de tu compra (JSON)</h3>
-                <button onclick="closeJsonModal()" class="text-gray-400 hover:text-red-500">
-                    <i data-lucide="x-circle"></i>
+                <button onclick="closeJsonModal()" class="text-gray-400 hover:text-red-500 text-xl">
+                    <i class="fa-solid fa-circle-xmark"></i>
                 </button>
             </div>
             <pre id="json-display" class="bg-gray-900 text-green-400 p-6 rounded-2xl overflow-x-auto text-xs md:text-sm font-mono max-h-96 border-l-4 border-orange-500"></pre>
             <div class="mt-6 flex gap-4">
                 <button onclick="copyJson()" class="flex-grow bg-orange-500 text-white py-3 rounded-xl font-bold hover:bg-orange-600 flex items-center justify-center gap-2 text-sm">
-                    <i data-lucide="copy" class="w-4 h-4"></i> Copiar Código JSON
+                    <i class="fa-regular fa-copy"></i> Copiar Código JSON
                 </button>
             </div>
         </div>
     </div>
 
     <!-- Hero -->
-    <header class="hero-gradient py-12 px-6 text-center">
+    <header class="hero-gradient py-12 px-4 md:px-6 text-center overflow-hidden">
         <div class="max-w-4xl mx-auto flex flex-col items-center">
             
             <!-- Contenedor para Logo Principal -->
@@ -115,18 +115,18 @@
                 </div>
             </div>
 
-            <!-- Título ajustado para evitar cortes -->
-            <div class="px-2">
-                <h1 class="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black mb-4 tracking-tight uppercase leading-[0.9] italic">
-                    GOMITAS QUE <br><span class="gradient-text tracking-normal">PICAN RICO</span>
+            <!-- Título ajustado para evitar cortes (Tamaño dinámico y padding seguro) -->
+            <div class="w-full px-2 sm:px-4">
+                <h1 class="text-5xl sm:text-6xl md:text-7xl lg:text-[5.5rem] font-black mb-6 uppercase leading-[1.1] italic break-words">
+                    GOMITAS QUE <br><span class="gradient-text pr-2 block md:inline-block mt-2 md:mt-0">PICAN RICO</span>
                 </h1>
             </div>
             
-            <p class="text-lg md:text-xl text-gray-500 mb-10 max-w-xl mx-auto font-medium leading-relaxed">
+            <p class="text-lg md:text-xl text-gray-500 mb-10 max-w-xl mx-auto font-medium leading-relaxed px-4">
                 Sabor guatemalteco hecho con la mezcla perfecta de chiles, limón y mucha pasión. ¡Prepárate para el fuego!
             </p>
             <a href="#productos" class="bg-red-600 text-white font-bold px-10 py-5 rounded-2xl hover:bg-red-700 transition-all transform hover:scale-105 shadow-2xl flex items-center gap-3 text-lg">
-                Ver sabores <i data-lucide="flame" class="w-6 h-6"></i>
+                Ver sabores <i class="fa-solid fa-fire text-xl"></i>
             </a>
         </div>
     </header>
@@ -149,7 +149,7 @@
                     <div class="flex items-center gap-3">
                         <input type="number" id="qty-mango" value="1" min="1" class="w-16 bg-gray-100 border-2 border-gray-100 rounded-xl p-3 text-center font-bold focus:ring-2 focus:ring-orange-500 outline-none transition-all">
                         <button onclick="addToCart('Mango Enchilado', 45, '🥭', 'qty-mango')" class="flex-grow bg-gray-900 text-white p-4 rounded-xl hover:bg-red-600 transition font-bold flex items-center justify-center gap-2 text-sm uppercase tracking-wider">
-                            <i data-lucide="plus" class="w-5 h-5"></i> Añadir
+                            <i class="fa-solid fa-plus"></i> Añadir
                         </button>
                     </div>
                 </div>
@@ -165,7 +165,7 @@
                     <div class="flex items-center gap-3">
                         <input type="number" id="qty-sandia" value="1" min="1" class="w-16 bg-gray-100 border-2 border-gray-100 rounded-xl p-3 text-center font-bold focus:ring-2 focus:ring-orange-500 outline-none transition-all">
                         <button onclick="addToCart('Sandía Picatto', 38, '🍉', 'qty-sandia')" class="flex-grow bg-gray-900 text-white p-4 rounded-xl hover:bg-red-600 transition font-bold flex items-center justify-center gap-2 text-sm uppercase tracking-wider">
-                            <i data-lucide="plus" class="w-5 h-5"></i> Añadir
+                            <i class="fa-solid fa-plus"></i> Añadir
                         </button>
                     </div>
                 </div>
@@ -181,7 +181,7 @@
                     <div class="flex items-center gap-3">
                         <input type="number" id="qty-ositos" value="1" min="1" class="w-16 bg-gray-100 border-2 border-gray-100 rounded-xl p-3 text-center font-bold focus:ring-2 focus:ring-orange-500 outline-none transition-all">
                         <button onclick="addToCart('Ositos de Fuego', 40, '🔥', 'qty-ositos')" class="flex-grow bg-gray-900 text-white p-4 rounded-xl hover:bg-red-600 transition font-bold flex items-center justify-center gap-2 text-sm uppercase tracking-wider">
-                            <i data-lucide="plus" class="w-5 h-5"></i> Añadir
+                            <i class="fa-solid fa-plus"></i> Añadir
                         </button>
                     </div>
                 </div>
@@ -204,15 +204,16 @@
             
             <div class="flex flex-col items-center md:items-end gap-6">
                 <h5 class="font-bold text-gray-400 uppercase tracking-widest text-sm">Síguenos en el fuego</h5>
-                <div class="flex gap-6">
-                    <a href="#" class="p-4 bg-gray-800 rounded-2xl text-white hover:bg-orange-500 transition-all hover:-translate-y-2">
-                        <i data-lucide="instagram"></i>
+                <div class="flex gap-4">
+                    <!-- Iconos actualizados a Font Awesome Brands -->
+                    <a href="#" class="w-12 h-12 flex items-center justify-center bg-gray-800 rounded-2xl text-white hover:bg-orange-500 transition-all hover:-translate-y-2">
+                        <i class="fa-brands fa-instagram text-2xl"></i>
                     </a>
-                    <a href="#" class="p-4 bg-gray-800 rounded-2xl text-white hover:bg-red-600 transition-all hover:-translate-y-2">
-                        <i data-lucide="facebook"></i>
+                    <a href="#" class="w-12 h-12 flex items-center justify-center bg-gray-800 rounded-2xl text-white hover:bg-red-600 transition-all hover:-translate-y-2">
+                        <i class="fa-brands fa-facebook-f text-xl"></i>
                     </a>
-                    <a href="#" class="p-4 bg-gray-800 rounded-2xl text-white hover:bg-yellow-500 transition-all hover:-translate-y-2">
-                        <i data-lucide="music"></i>
+                    <a href="#" class="w-12 h-12 flex items-center justify-center bg-gray-800 rounded-2xl text-white hover:bg-yellow-500 transition-all hover:-translate-y-2 hover:text-black">
+                        <i class="fa-brands fa-tiktok text-xl"></i>
                     </a>
                 </div>
             </div>
@@ -228,8 +229,6 @@
     </div>
 
     <script>
-        lucide.createIcons();
-
         let cart = [];
         const cartSidebar = document.getElementById('cart-sidebar');
         const cartOverlay = document.getElementById('cart-overlay');
