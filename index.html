@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Piccatto | Gomitas enchiladas</title>
+  <title>Picatto | Gomitas enchiladas</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -86,9 +86,9 @@
   <header class="sticky top-0 z-30 border-b border-orange-100 bg-white/92 backdrop-blur">
     <div class="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 md:px-6">
       <a href="index.html" class="flex items-center gap-3">
-        <img src="/assets/brand/logo.png" alt="Piccatto" class="h-11 w-11 rounded-lg object-cover">
+        <img src="./assets/brand/logo.png" alt="Picatto" class="h-11 w-11 rounded-lg object-cover">
         <span>
-          <span class="block text-xl font-black uppercase leading-5 text-red-700">Piccatto</span>
+          <span class="block text-xl font-black uppercase leading-5 text-red-700">Picatto</span>
           <span class="block text-xs font-black uppercase text-slate-500">Gomitas enchiladas</span>
         </span>
       </a>
@@ -102,7 +102,7 @@
     <section class="hero flex items-end">
       <div class="mx-auto w-full max-w-6xl px-4 pb-10 pt-20 text-white md:px-6 md:pb-16">
         <p class="mb-3 text-sm font-black uppercase text-orange-200">Hechas en Guatemala</p>
-        <h1 class="max-w-3xl text-4xl font-black leading-tight md:text-6xl">Piccatto</h1>
+        <h1 class="max-w-3xl text-4xl font-black leading-tight md:text-6xl">Picatto</h1>
         <p class="mt-4 max-w-2xl text-lg font-bold leading-8 text-orange-50">Escoge tu producto y enviamos tu pedido directo por WhatsApp.</p>
         <a href="#productos" class="mt-6 inline-flex items-center gap-2 rounded-lg bg-red-700 px-5 py-3 text-sm font-black text-white shadow-xl shadow-red-900/20">
           <i class="fa-solid fa-basket-shopping"></i> Ver productos
@@ -141,7 +141,7 @@
   </main>
 
   <footer class="border-t border-orange-100 bg-white px-4 py-6 text-center text-xs font-bold uppercase text-slate-500">
-    Piccatto | Pedidos por WhatsApp
+    Picatto | Pedidos por WhatsApp
   </footer>
 
   <div id="toast" class="fixed bottom-5 left-1/2 z-50 hidden -translate-x-1/2 rounded-lg bg-slate-950 px-5 py-3 text-sm font-black text-white"></div>
@@ -157,14 +157,14 @@
         name: "PICATTO",
         description: "Presentacion normal.",
         price: 15,
-        image: "/assets/products/picatto.png"
+        image: "./assets/products/picatto.png"
       },
       {
         id: "piccaxtreme",
         name: "PICAXTTREME",
         description: "Presentacion extrema.",
         price: 18,
-        image: "/assets/products/piccaxttreme.png"
+        image: "./assets/products/piccaxttreme.png"
       }
     ];
 
@@ -212,7 +212,7 @@
 
     function buildMessage() {
       const lines = [
-        "Hola Piccatto, quiero este pedido:",
+        "Hola Picatto, quiero este pedido:",
         ...cart.map(item => item.quantity + " x " + item.name),
         "Total: " + money(total())
       ];
@@ -274,7 +274,7 @@
     function renderCart() {
       document.getElementById("cart-total").textContent = "Total: " + money(total());
       const topWhatsApp = document.getElementById("top-whatsapp");
-      topWhatsApp.href = whatsappUrl(cart.length ? buildMessage() : "Hola Piccatto, quiero hacer un pedido.");
+      topWhatsApp.href = whatsappUrl(cart.length ? buildMessage() : "Hola Picatto, quiero hacer un pedido.");
 
       if (cart.length === 0) {
         document.getElementById("cart-lines").textContent = "Aun no has elegido productos.";
