@@ -1,350 +1,299 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Picatto | Gomitas Enchiladas</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
-    <!-- Font Awesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #fffaf5;
-        }
-        .gradient-text {
-            background: linear-gradient(90deg, #ef4444, #f97316);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .hero-gradient {
-            background: radial-gradient(circle at center, #ffedd5 0%, #fffaf5 100%);
-        }
-        #cart-sidebar {
-            transition: transform 0.3s ease-in-out;
-        }
-        .cart-open {
-            transform: translateX(0) !important;
-        }
-        input::-webkit-outer-spin-button,
-        input::-webkit-inner-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-        }
-        @keyframes soft-glow {
-            0%, 100% { opacity: 0.3; transform: scale(1); }
-            50% { opacity: 0.6; transform: scale(1.05); }
-        }
-        .animate-glow {
-            animation: soft-glow 3s infinite ease-in-out;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Piccatto | Gomitas enchiladas</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <style>
+    body {
+      font-family: Inter, system-ui, sans-serif;
+      background: #fff8ef;
+      color: #201713;
+      letter-spacing: 0;
+    }
+
+    .hero {
+      min-height: 72vh;
+      background:
+        linear-gradient(90deg, rgba(32, 23, 19, 0.78), rgba(32, 23, 19, 0.22)),
+        url("https://i.imgur.com/FixhvoL.jpeg");
+      background-size: cover;
+      background-position: center;
+    }
+
+    .card {
+      border: 1px solid #eadfd3;
+      border-radius: 8px;
+      background: #fff;
+      box-shadow: 0 16px 44px rgba(64, 38, 26, 0.08);
+      overflow: hidden;
+    }
+
+    .product-media {
+      height: 390px;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .product-media img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      object-position: center 0%;
+      display: block;
+    }
+
+    .image-viewer {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.84);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 60;
+      padding: 20px;
+    }
+
+    .image-viewer img {
+      max-width: min(96vw, 1300px);
+      max-height: 92vh;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      border-radius: 8px;
+      background: #fff;
+    }
+
+    .icon-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 2.5rem;
+      height: 2.5rem;
+      border-radius: 8px;
+    }
+  </style>
 </head>
-<body class="text-gray-900 overflow-x-hidden">
-
-    <!-- Navegación -->
-    <nav class="flex justify-between items-center p-6 max-w-6xl mx-auto sticky top-0 bg-white/80 backdrop-blur-md z-40">
-        <div class="flex items-center gap-3">
-            <div class="h-10 w-10 flex items-center justify-center bg-white rounded-full shadow-sm border border-red-100 p-1 overflow-hidden">
-                <img src="logo.svg" alt="Logo" class="w-full h-full object-contain" onerror="this.src='https://i.imgur.com/FbuSsbw.png'">
-            </div>
-            <span class="text-xl font-black tracking-tighter text-red-600 uppercase italic">Picatto</span>
-        </div>
-        <div class="flex items-center gap-4 md:gap-8 font-medium">
-            <a href="#productos" class="hidden md:block hover:text-orange-500 transition">Productos</a>
-            <button onclick="toggleCart()" class="relative p-3 bg-orange-100 rounded-full text-orange-600 hover:bg-orange-200 transition">
-                <i class="fa-solid fa-cart-shopping text-lg"></i>
-                <span id="cart-count" class="absolute -top-1 -right-1 bg-red-600 text-white text-[10px] font-bold h-5 w-5 flex items-center justify-center rounded-full border-2 border-white">0</span>
-            </button>
-            <a href="#" class="hidden md:block bg-red-600 text-white px-5 py-2 rounded-full hover:bg-red-700 transition shadow-lg">Comprar</a>
-        </div>
-    </nav>
-
-    <!-- Carrito Lateral -->
-    <div id="cart-overlay" onclick="toggleCart()" class="fixed inset-0 bg-black/50 z-50 hidden opacity-0 transition-opacity duration-300"></div>
-    <aside id="cart-sidebar" class="fixed top-0 right-0 h-full w-full max-w-sm bg-white z-[60] shadow-2xl transform translate-x-full flex flex-col">
-        <div class="p-6 border-b flex justify-between items-center">
-            <h2 class="text-2xl font-black text-gray-800 uppercase tracking-tighter italic">Tu Carrito</h2>
-            <button onclick="toggleCart()" class="text-gray-400 hover:text-gray-600 text-2xl">
-                <i class="fa-solid fa-xmark"></i>
-            </button>
-        </div>
-        <div id="cart-items" class="flex-grow overflow-y-auto p-6 space-y-4">
-            <p class="text-center text-gray-400 py-10 italic text-sm font-medium">Aún no has picado nada... 🌶️</p>
-        </div>
-        <div class="p-6 border-t bg-gray-50">
-            <div class="flex justify-between items-center mb-4">
-                <span class="text-gray-500 font-medium uppercase text-xs tracking-widest">Total Pedido</span>
-                <span id="cart-total" class="text-3xl font-black text-red-600">Q0.00</span>
-            </div>
-            <button onclick="checkout()" class="w-full bg-red-600 text-white py-4 rounded-2xl font-bold hover:bg-red-700 transition shadow-xl active:scale-95 flex items-center justify-center gap-2">
-                <i class="fa-solid fa-circle-check text-lg"></i> Finalizar Pedido
-            </button>
-        </div>
-    </aside>
-
-    <!-- Modal JSON -->
-    <div id="json-modal" class="fixed inset-0 z-[70] hidden items-center justify-center p-4">
-        <div class="absolute inset-0 bg-black/60" onclick="closeJsonModal()"></div>
-        <div class="bg-white rounded-3xl p-8 max-w-2xl w-full relative shadow-2xl overflow-hidden">
-            <div class="flex justify-between items-center mb-4">
-                <h3 class="text-xl font-bold">Resumen de tu compra (JSON)</h3>
-                <button onclick="closeJsonModal()" class="text-gray-400 hover:text-red-500 text-xl">
-                    <i class="fa-solid fa-circle-xmark"></i>
-                </button>
-            </div>
-            <pre id="json-display" class="bg-gray-900 text-green-400 p-6 rounded-2xl overflow-x-auto text-xs md:text-sm font-mono max-h-96 border-l-4 border-orange-500"></pre>
-            <div class="mt-6 flex gap-4">
-                <button onclick="copyJson()" class="flex-grow bg-orange-500 text-white py-3 rounded-xl font-bold hover:bg-orange-600 flex items-center justify-center gap-2 text-sm">
-                    <i class="fa-regular fa-copy"></i> Copiar Código JSON
-                </button>
-            </div>
-        </div>
+<body>
+  <header class="sticky top-0 z-30 border-b border-orange-100 bg-white/92 backdrop-blur">
+    <div class="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 md:px-6">
+      <a href="index.html" class="flex items-center gap-3">
+        <img src="/assets/brand/logo.png" alt="Piccatto" class="h-11 w-11 rounded-lg object-cover">
+        <span>
+          <span class="block text-xl font-black uppercase leading-5 text-red-700">Piccatto</span>
+          <span class="block text-xs font-black uppercase text-slate-500">Gomitas enchiladas</span>
+        </span>
+      </a>
+      <a id="top-whatsapp" class="rounded-lg bg-green-600 px-4 py-2 text-sm font-black text-white" target="_blank" rel="noopener">
+        <i class="fa-brands fa-whatsapp mr-2"></i>Pedir
+      </a>
     </div>
+  </header>
 
-    <!-- Hero -->
-    <header class="hero-gradient py-12 px-4 md:px-6 text-center overflow-hidden">
-        <div class="max-w-4xl mx-auto flex flex-col items-center">
-            
-            <!-- Contenedor para Logo Principal -->
-            <div class="relative mb-10 group">
-                <div class="absolute inset-0 bg-orange-400 rounded-full blur-3xl opacity-30 animate-glow"></div>
-                <div class="relative bg-white p-6 rounded-full border-[6px] border-orange-500 shadow-[0_20px_50px_rgba(249,115,22,0.4)] animate-bounce h-40 w-40 md:h-60 md:w-60 flex items-center justify-center overflow-hidden" style="animation-duration: 6s">
-                    <img src="logo.svg" alt="Picatto Mascot" class="w-full h-full object-contain" onerror="this.src='https://i.imgur.com/FbuSsbw.png'">
-                </div>
-            </div>
-
-            <!-- Título ajustado para evitar cortes (Tamaño dinámico y padding seguro) -->
-            <div class="w-full px-2 sm:px-4">
-                <h1 class="text-5xl sm:text-6xl md:text-7xl lg:text-[5.5rem] font-black mb-6 uppercase leading-[1.1] italic break-words">
-                    GOMITAS QUE <br><span class="gradient-text pr-2 block md:inline-block mt-2 md:mt-0">PICAN RICO</span>
-                </h1>
-            </div>
-            
-            <p class="text-lg md:text-xl text-gray-500 mb-10 max-w-xl mx-auto font-medium leading-relaxed px-4">
-                Sabor guatemalteco hecho con la mezcla perfecta de chiles, limón y mucha pasión. ¡Prepárate para el fuego!
-            </p>
-            <a href="#productos" class="bg-red-600 text-white font-bold px-10 py-5 rounded-2xl hover:bg-red-700 transition-all transform hover:scale-105 shadow-2xl flex items-center gap-3 text-lg">
-                Ver sabores <i class="fa-solid fa-fire text-xl"></i>
-            </a>
-        </div>
-    </header>
-
-    <!-- Productos -->
-    <section id="productos" class="max-w-6xl mx-auto py-20 px-6">
-        <div class="text-center mb-16">
-            <h2 class="text-4xl font-black uppercase text-gray-900 mb-2 italic">Nuestro Menú</h2>
-            <div class="w-24 h-2 bg-red-500 mx-auto rounded-full"></div>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
-            <!-- Producto 1 -->
-            <div class="group bg-white p-10 rounded-[3rem] shadow-sm border border-gray-100 hover:shadow-2xl transition-all hover:-translate-y-2 relative overflow-hidden flex flex-col h-full">
-                <div class="bg-yellow-50 w-20 h-20 rounded-3xl flex items-center justify-center mb-8 text-4xl shadow-inner">🥭</div>
-                <h3 class="text-2xl font-black mb-3 leading-tight uppercase tracking-tighter italic">Mango Enchilado</h3>
-                <p class="text-gray-500 text-sm mb-8 leading-relaxed flex-grow font-medium">Trozos jugosos de mango deshidratado con una generosa costra de chamoy artesanal y chile morita.</p>
-                <div class="flex flex-col gap-4 mt-auto">
-                    <span class="text-3xl font-black text-orange-600">Q45.00</span>
-                    <div class="flex items-center gap-3">
-                        <input type="number" id="qty-mango" value="1" min="1" class="w-16 bg-gray-100 border-2 border-gray-100 rounded-xl p-3 text-center font-bold focus:ring-2 focus:ring-orange-500 outline-none transition-all">
-                        <button onclick="addToCart('Mango Enchilado', 45, '🥭', 'qty-mango')" class="flex-grow bg-gray-900 text-white p-4 rounded-xl hover:bg-red-600 transition font-bold flex items-center justify-center gap-2 text-sm uppercase tracking-wider">
-                            <i class="fa-solid fa-plus"></i> Añadir
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Producto 2 -->
-            <div class="group bg-white p-10 rounded-[3rem] shadow-sm border border-gray-100 hover:shadow-2xl transition-all hover:-translate-y-2 relative overflow-hidden flex flex-col h-full">
-                <div class="bg-red-50 w-20 h-20 rounded-3xl flex items-center justify-center mb-8 text-4xl shadow-inner">🍉</div>
-                <h3 class="text-2xl font-black mb-3 leading-tight uppercase tracking-tighter italic">Sandía Picatto</h3>
-                <p class="text-gray-500 text-sm mb-8 leading-relaxed flex-grow font-medium">Las clásicas gomitas de sandía ácidas con un baño intenso de chile de árbol seco y sal de limón.</p>
-                <div class="flex flex-col gap-4 mt-auto">
-                    <span class="text-3xl font-black text-orange-600">Q38.00</span>
-                    <div class="flex items-center gap-3">
-                        <input type="number" id="qty-sandia" value="1" min="1" class="w-16 bg-gray-100 border-2 border-gray-100 rounded-xl p-3 text-center font-bold focus:ring-2 focus:ring-orange-500 outline-none transition-all">
-                        <button onclick="addToCart('Sandía Picatto', 38, '🍉', 'qty-sandia')" class="flex-grow bg-gray-900 text-white p-4 rounded-xl hover:bg-red-600 transition font-bold flex items-center justify-center gap-2 text-sm uppercase tracking-wider">
-                            <i class="fa-solid fa-plus"></i> Añadir
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Producto 3 -->
-            <div class="group bg-white p-10 rounded-[3rem] shadow-sm border border-gray-100 hover:shadow-2xl transition-all hover:-translate-y-2 relative overflow-hidden flex flex-col h-full">
-                <div class="bg-orange-50 w-20 h-20 rounded-3xl flex items-center justify-center mb-8 text-4xl shadow-inner">🔥</div>
-                <h3 class="text-2xl font-black mb-3 leading-tight uppercase tracking-tighter italic">Ositos de Fuego</h3>
-                <p class="text-gray-500 text-sm mb-8 leading-relaxed flex-grow font-medium">Ositos frutales dulces que esconden una explosión de calor. Solo aptos para valientes.</p>
-                <div class="flex flex-col gap-4 mt-auto">
-                    <span class="text-3xl font-black text-orange-600">Q40.00</span>
-                    <div class="flex items-center gap-3">
-                        <input type="number" id="qty-ositos" value="1" min="1" class="w-16 bg-gray-100 border-2 border-gray-100 rounded-xl p-3 text-center font-bold focus:ring-2 focus:ring-orange-500 outline-none transition-all">
-                        <button onclick="addToCart('Ositos de Fuego', 40, '🔥', 'qty-ositos')" class="flex-grow bg-gray-900 text-white p-4 rounded-xl hover:bg-red-600 transition font-bold flex items-center justify-center gap-2 text-sm uppercase tracking-wider">
-                            <i class="fa-solid fa-plus"></i> Añadir
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
+  <main>
+    <section class="hero flex items-end">
+      <div class="mx-auto w-full max-w-6xl px-4 pb-10 pt-20 text-white md:px-6 md:pb-16">
+        <p class="mb-3 text-sm font-black uppercase text-orange-200">Hechas en Guatemala</p>
+        <h1 class="max-w-3xl text-4xl font-black leading-tight md:text-6xl">Piccatto</h1>
+        <p class="mt-4 max-w-2xl text-lg font-bold leading-8 text-orange-50">Escoge tu producto y enviamos tu pedido directo por WhatsApp.</p>
+        <a href="#productos" class="mt-6 inline-flex items-center gap-2 rounded-lg bg-red-700 px-5 py-3 text-sm font-black text-white shadow-xl shadow-red-900/20">
+          <i class="fa-solid fa-basket-shopping"></i> Ver productos
+        </a>
+      </div>
     </section>
 
-    <!-- Footer -->
-    <footer class="bg-gray-900 text-white py-20 px-6">
-        <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-12">
-            <div class="text-center md:text-left">
-                <div class="flex items-center gap-4 justify-center md:justify-start mb-6">
-                    <div class="h-16 w-16 bg-white rounded-full p-2 border-4 border-red-500 flex items-center justify-center overflow-hidden">
-                        <img src="logo.svg" alt="Logo Footer" class="w-full h-full object-contain" onerror="this.src='https://i.imgur.com/FbuSsbw.png'">
-                    </div>
-                    <h4 class="font-black text-3xl tracking-tighter uppercase italic">PICATTO</h4>
-                </div>
-                <p class="text-gray-400 max-w-xs font-medium">Llevando el picante artesanal a cada rincón de Guatemala desde nuestra cocina.</p>
-            </div>
-            
-            <div class="flex flex-col items-center md:items-end gap-6">
-                <h5 class="font-bold text-gray-400 uppercase tracking-widest text-sm">Síguenos en el fuego</h5>
-                <div class="flex gap-4">
-                    <!-- Iconos actualizados a Font Awesome Brands -->
-                    <a href="#" class="w-12 h-12 flex items-center justify-center bg-gray-800 rounded-2xl text-white hover:bg-orange-500 transition-all hover:-translate-y-2">
-                        <i class="fa-brands fa-instagram text-2xl"></i>
-                    </a>
-                    <a href="#" class="w-12 h-12 flex items-center justify-center bg-gray-800 rounded-2xl text-white hover:bg-red-600 transition-all hover:-translate-y-2">
-                        <i class="fa-brands fa-facebook-f text-xl"></i>
-                    </a>
-                    <a href="#" class="w-12 h-12 flex items-center justify-center bg-gray-800 rounded-2xl text-white hover:bg-yellow-500 transition-all hover:-translate-y-2 hover:text-black">
-                        <i class="fa-brands fa-tiktok text-xl"></i>
-                    </a>
-                </div>
-            </div>
+    <section id="productos" class="mx-auto max-w-6xl px-4 py-10 md:px-6 md:py-14">
+      <div class="mb-6 flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
+        <div>
+          <p class="text-sm font-black uppercase text-red-700">Menu publico</p>
+          <h2 class="text-3xl font-black text-slate-950">Elige y envia por WhatsApp</h2>
         </div>
-        <div class="mt-20 pt-8 border-t border-gray-800 text-center text-gray-500 text-xs uppercase tracking-[0.2em]">
-            &copy; 2024 Picatto | Hecho con fuego en Guatemala
+        <p id="cart-total" class="text-xl font-black text-red-700">Total: Q0.00</p>
+      </div>
+
+      <div id="product-grid" class="grid gap-5 md:grid-cols-2"></div>
+
+      <aside class="card mt-6 p-4 md:p-5">
+        <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+          <div>
+            <h3 class="text-xl font-black">Tu pedido</h3>
+            <div id="cart-lines" class="mt-2 text-sm font-bold leading-6 text-slate-600">Aun no has elegido productos.</div>
+          </div>
+          <div class="flex flex-wrap gap-2">
+            <button onclick="clearCart()" class="rounded-lg border border-slate-200 bg-white px-4 py-3 text-sm font-black text-slate-700">
+              <i class="fa-solid fa-trash-can mr-2"></i>Limpiar
+            </button>
+            <button onclick="sendOrderToWhatsApp()" class="rounded-lg bg-green-600 px-5 py-3 text-sm font-black text-white">
+              <i class="fa-brands fa-whatsapp mr-2"></i>Enviar pedido
+            </button>
+          </div>
         </div>
-    </footer>
+      </aside>
+    </section>
+  </main>
 
-    <!-- Sistema de Toast -->
-    <div id="toast" class="fixed bottom-8 left-1/2 transform -translate-x-1/2 bg-gray-900 text-white px-8 py-4 rounded-2xl shadow-2xl transition-all opacity-0 translate-y-10 pointer-events-none z-[100] text-sm font-bold border border-gray-700">
-        Mensaje
-    </div>
+  <footer class="border-t border-orange-100 bg-white px-4 py-6 text-center text-xs font-bold uppercase text-slate-500">
+    Piccatto | Pedidos por WhatsApp
+  </footer>
 
-    <script>
-        let cart = [];
-        const cartSidebar = document.getElementById('cart-sidebar');
-        const cartOverlay = document.getElementById('cart-overlay');
-        const cartItemsContainer = document.getElementById('cart-items');
-        const cartCountBadge = document.getElementById('cart-count');
-        const cartTotalDisplay = document.getElementById('cart-total');
+  <div id="toast" class="fixed bottom-5 left-1/2 z-50 hidden -translate-x-1/2 rounded-lg bg-slate-950 px-5 py-3 text-sm font-black text-white"></div>
+  <div id="image-viewer" class="image-viewer" onclick="closeImageViewer()">
+    <img id="image-viewer-img" alt="Vista completa del producto">
+  </div>
 
-        function toggleCart() {
-            const isOpen = cartSidebar.classList.contains('cart-open');
-            if (isOpen) {
-                cartSidebar.classList.remove('cart-open');
-                cartOverlay.classList.add('hidden');
-                cartOverlay.classList.remove('opacity-100');
-            } else {
-                cartSidebar.classList.add('cart-open');
-                cartOverlay.classList.remove('hidden');
-                setTimeout(() => cartOverlay.classList.add('opacity-100'), 10);
-            }
-        }
+  <script>
+    const WHATSAPP_NUMBER = "50244099902";
+    const products = [
+      {
+        id: "picatto",
+        name: "PICATTO",
+        description: "Presentacion normal.",
+        price: 15,
+        image: "/assets/products/picatto.png"
+      },
+      {
+        id: "piccaxtreme",
+        name: "PICAXTTREME",
+        description: "Presentacion extrema.",
+        price: 18,
+        image: "/assets/products/piccaxttreme.png"
+      }
+    ];
 
-        function showMessage(text) {
-            const toast = document.getElementById('toast');
-            toast.innerText = text;
-            toast.style.opacity = '1';
-            toast.style.transform = 'translate(-50%, -20px)';
-            setTimeout(() => {
-                toast.style.opacity = '0';
-                toast.style.transform = 'translate(-50%, 40px)';
-            }, 2500);
-        }
+    let cart = [];
 
-        function addToCart(name, price, emoji, inputId) {
-            const quantityInput = document.getElementById(inputId);
-            const quantity = parseInt(quantityInput.value) || 1;
-            if (quantity <= 0) return;
-            const existingItem = cart.find(item => item.name === name);
-            if (existingItem) {
-                existingItem.quantity += quantity;
-            } else {
-                cart.push({ name, price, emoji, quantity });
-            }
-            updateCartUI();
-            showMessage(`¡Se añadieron ${quantity} x ${name}! 🌶️`);
-            quantityInput.value = 1;
-        }
+    function money(value) {
+      return "Q" + Number(value || 0).toFixed(2);
+    }
 
-        function updateQuantity(name, change) {
-            const item = cart.find(i => i.name === name);
-            if (item) {
-                item.quantity += change;
-                if (item.quantity <= 0) {
-                    cart = cart.filter(i => i.name !== name);
-                }
-                updateCartUI();
-            }
-        }
+    function showToast(message) {
+      const toast = document.getElementById("toast");
+      toast.textContent = message;
+      toast.classList.remove("hidden");
+      clearTimeout(showToast.timer);
+      showToast.timer = setTimeout(() => toast.classList.add("hidden"), 2400);
+    }
 
-        function updateCartUI() {
-            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-            cartCountBadge.innerText = totalItems;
-            if (cart.length === 0) {
-                cartItemsContainer.innerHTML = '<p class="text-center text-gray-400 py-10 italic text-sm font-medium">Aún no has picado nada... 🌶️</p>';
-            } else {
-                cartItemsContainer.innerHTML = cart.map(item => `
-                    <div class="flex items-center gap-4 bg-gray-50 p-4 rounded-3xl border border-gray-100 shadow-sm transition-all hover:bg-white hover:shadow-md">
-                        <div class="text-3xl bg-white w-12 h-12 flex items-center justify-center rounded-2xl shadow-inner border border-gray-50">${item.emoji}</div>
-                        <div class="flex-grow">
-                            <h4 class="font-black text-xs uppercase tracking-tight italic">${item.name}</h4>
-                            <p class="text-orange-600 font-bold text-lg">Q${(item.price * item.quantity).toFixed(2)}</p>
-                        </div>
-                        <div class="flex items-center gap-2 bg-white rounded-xl border-2 border-gray-50 p-1 shadow-sm">
-                            <button onclick="updateQuantity('${item.name}', -1)" class="w-7 h-7 flex items-center justify-center text-gray-400 hover:text-red-600 transition font-bold">&minus;</button>
-                            <span class="text-xs font-black w-4 text-center">${item.quantity}</span>
-                            <button onclick="updateQuantity('${item.name}', 1)" class="w-7 h-7 flex items-center justify-center text-gray-400 hover:text-green-600 transition font-bold">&plus;</button>
-                        </div>
-                    </div>
-                `).join('');
-            }
-            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-            cartTotalDisplay.innerText = `Q${total.toFixed(2)}`;
-        }
+    function addToCart(productId) {
+      const product = products.find(item => item.id === productId);
+      const qty = Math.max(1, Number(document.getElementById("qty-" + productId).value || 1));
+      const existing = cart.find(item => item.id === productId);
+      if (existing) existing.quantity += qty;
+      else cart.push({ ...product, quantity: qty });
+      document.getElementById("qty-" + productId).value = 1;
+      renderCart();
+      showToast("Agregado al pedido.");
+    }
 
-        function checkout() {
-            if (cart.length === 0) {
-                showMessage("¡Tu carrito está vacío!");
-                return;
-            }
-            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-            const orderData = {
-                vendedor: "PICATTO GUATEMALA",
-                moneda: "Quetzales (Q)",
-                id_pedido: "PEDIDO-" + Math.random().toString(36).substr(2, 6).toUpperCase(),
-                articulos: cart.map(item => ({
-                    producto: item.name,
-                    cant: item.quantity,
-                    pu: "Q" + item.price.toFixed(2),
-                    subtotal: "Q" + (item.price * item.quantity).toFixed(2)
-                })),
-                total_final: "Q" + total.toFixed(2),
-                fecha: new Date().toLocaleString()
-            };
-            document.getElementById('json-display').innerText = JSON.stringify(orderData, null, 4);
-            document.getElementById('json-modal').style.display = 'flex';
-        }
+    function updateQty(productId, change) {
+      const item = cart.find(entry => entry.id === productId);
+      if (!item) return;
+      item.quantity += change;
+      if (item.quantity <= 0) cart = cart.filter(entry => entry.id !== productId);
+      renderCart();
+    }
 
-        function closeJsonModal() { document.getElementById('json-modal').style.display = 'none'; }
-        function copyJson() {
-            const jsonText = document.getElementById('json-display').innerText;
-            const el = document.createElement('textarea');
-            el.value = jsonText;
-            document.body.appendChild(el);
-            el.select();
-            document.execCommand('copy');
-            document.body.removeChild(el);
-            showMessage("¡JSON copiado con éxito!");
-        }
-    </script>
+    function clearCart() {
+      cart = [];
+      renderCart();
+    }
+
+    function total() {
+      return cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+    }
+
+    function buildMessage() {
+      const lines = [
+        "Hola Piccatto, quiero este pedido:",
+        ...cart.map(item => item.quantity + " x " + item.name),
+        "Total: " + money(total())
+      ];
+      return lines.join("\n");
+    }
+
+    function whatsappUrl(message) {
+      return "https://wa.me/" + WHATSAPP_NUMBER + "?text=" + encodeURIComponent(message);
+    }
+
+    function sendOrderToWhatsApp() {
+      if (cart.length === 0) {
+        showToast("Elige al menos un producto.");
+        return;
+      }
+      window.open(whatsappUrl(buildMessage()), "_blank", "noopener");
+    }
+
+    function renderProducts() {
+      document.getElementById("product-grid").innerHTML = products.map(product => `
+        <article class="card mx-auto w-full max-w-[460px]">
+          <div class="product-media cursor-zoom-in" onclick="openImageViewer('${product.image}', '${product.name}')">
+            <img src="${product.image}" alt="${product.name}">
+          </div>
+          <div class="p-5">
+            <div class="flex items-start justify-between gap-3">
+              <div>
+                <h3 class="text-2xl font-black text-slate-950">${product.name}</h3>
+                <p class="mt-2 min-h-[48px] text-sm font-bold leading-6 text-slate-600">${product.description}</p>
+              </div>
+              <p class="text-2xl font-black text-red-700">${money(product.price)}</p>
+            </div>
+            <div class="mt-5 flex items-center justify-between gap-3">
+              <input id="qty-${product.id}" type="number" min="1" value="1" class="h-11 w-20 rounded-lg border border-slate-200 text-center font-black outline-none focus:border-red-500">
+              <button onclick="addToCart('${product.id}')" class="flex items-center gap-2 rounded-lg bg-slate-950 px-4 py-3 text-sm font-black text-white">
+                <i class="fa-solid fa-plus"></i> Agregar
+              </button>
+            </div>
+          </div>
+        </article>
+      `).join("");
+    }
+
+    function openImageViewer(src, alt) {
+      const viewer = document.getElementById("image-viewer");
+      const img = document.getElementById("image-viewer-img");
+      img.src = src;
+      img.alt = alt || "Producto";
+      viewer.style.display = "flex";
+    }
+
+    function closeImageViewer() {
+      const viewer = document.getElementById("image-viewer");
+      const img = document.getElementById("image-viewer-img");
+      viewer.style.display = "none";
+      img.src = "";
+    }
+
+    function renderCart() {
+      document.getElementById("cart-total").textContent = "Total: " + money(total());
+      const topWhatsApp = document.getElementById("top-whatsapp");
+      topWhatsApp.href = whatsappUrl(cart.length ? buildMessage() : "Hola Piccatto, quiero hacer un pedido.");
+
+      if (cart.length === 0) {
+        document.getElementById("cart-lines").textContent = "Aun no has elegido productos.";
+        return;
+      }
+
+      document.getElementById("cart-lines").innerHTML = cart.map(item => `
+        <div class="mb-2 flex items-center justify-between gap-3 rounded-lg bg-slate-50 p-3">
+          <span>${item.quantity} x ${item.name} - ${money(item.price * item.quantity)}</span>
+          <span class="flex items-center gap-2">
+            <button class="icon-button h-8 w-8 bg-white text-slate-700" onclick="updateQty('${item.id}', -1)" aria-label="Quitar"><i class="fa-solid fa-minus"></i></button>
+            <button class="icon-button h-8 w-8 bg-white text-slate-700" onclick="updateQty('${item.id}', 1)" aria-label="Agregar"><i class="fa-solid fa-plus"></i></button>
+          </span>
+        </div>
+      `).join("");
+    }
+
+    renderProducts();
+    renderCart();
+  </script>
 </body>
 </html>
